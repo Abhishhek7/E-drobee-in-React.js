@@ -1,39 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import 'aos/dist/aos.css';
-import AOS from 'aos';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
-const Card = ({ updateCartCount, updateWishlistCount }) => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const navigate = useNavigate();
-
+const Product = ({ updateCartCount, updateWishlistCount }) => {
+  const location = useLocation();
+  const products = location.state?.products || [];
   
+  const [searchQuery, setSearchQuery] = useState('');
   const [wishlist, setWishlist] = useState(
     JSON.parse(localStorage.getItem('wishlist')) || []
   );
 
   useEffect(() => {
-    AOS.init({ duration: 1000 });
-
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          'https://6763bd2817ec5852cae9c5bf.mockapi.io/agro/vi/api/products'
-        );
-        setProducts(response.data);
-        setLoading(false);
-      } catch (error) {
-        setError('Failed to fetch products');
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+   
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    if (updateWishlistCount) {
+      updateWishlistCount(wishlist.length);
+    }
+  }, [wishlist, updateWishlistCount]);
 
   const addToCart = (product) => {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -43,18 +26,13 @@ const Card = ({ updateCartCount, updateWishlistCount }) => {
   };
 
   const handleWishlist = (product) => {
-    const storedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-     const isAlreadyAdded = storedWishlist.find((item) => item.id === product.id);
+    const isAlreadyAdded = wishlist.find((item) => item.id === product.id);
 
     if (!isAlreadyAdded) {
-      const updatedWishlist = [...storedWishlist, product];
-      localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
-      setWishlist(updatedWishlist);
-      if (updateWishlistCount) {
-        updateWishlistCount(updatedWishlist.length);
-      }
-    } else {
       
+      const updatedWishlist = [...wishlist, product];
+      setWishlist(updatedWishlist);
+    } else {
       alert('Product is already in your wishlist.');
     }
   };
@@ -66,43 +44,36 @@ const Card = ({ updateCartCount, updateWishlistCount }) => {
     return description;
   };
 
-  const renderProducts = products.slice(0, 8);  
-
-  const handleGetMore = () => {
-    const remainingProducts = products.slice(8);
-    navigate('/product', { state: { products: remainingProducts } });
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-xl font-semibold text-gray-700 animate-pulse">Loading...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-lg font-semibold text-red-600">{error}</p>
-      </div>
-    );
-  }
+  const filteredProducts = products.filter((product) =>
+    product.productname.toLowerCase().startsWith(searchQuery.toLowerCase())
+  );
 
   return (
-    <div className="py-12 bg-gradient-to-b from-blue-50 to-blue-100 min-h-screen">
+    <div className="py-12 bg-gradient-to-b from-green-50 to-green-100 min-h-screen">
       <div className="container mx-auto px-6">
-        <h2 className="text-4xl font-extrabold text-center text-blue-800 mb-12">
-          Explore Our Products
+        <div className="flex justify-center mb-8">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="w-full max-w-lg px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+        <h2 className="text-4xl font-extrabold text-center text-green-800 mb-12">
+          Additional Products
         </h2>
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {renderProducts.map((product) => {
+          {filteredProducts.map((product) => {
             const isInWishlist = wishlist.some((item) => item.id === product.id);
             return (
               <div
-                className="bg-white rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl relative" 
+                className="bg-white rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl relative"
                 key={product.id}
-                data-aos="fade-up"
               >
                 <img
                   className="w-full h-56 object-cover"
@@ -151,33 +122,28 @@ const Card = ({ updateCartCount, updateWishlistCount }) => {
                   <p className="text-gray-600 text-sm mb-4">
                     {truncateDescription(product.productDescription, 80)}
                   </p>
-                  <h4 className="text-2xl font-bold text-blue-600 mb-6">
+                  <h4 className="text-2xl font-bold text-green-600 mb-6">
                     ${product.productPrice}
                   </h4>
-                  <div className="flex items-center justify-between">
-                    <button
-                      onClick={() => addToCart(product)}
-                      className="w-full px-4 py-2 text-white bg-green-500 rounded-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition"
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => addToCart(product)}
+                    className="w-full px-4 py-2 text-white bg-green-500 rounded-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition"
+                  >
+                    Add to Cart
+                  </button>
                 </div>
               </div>
             );
           })}
         </div>
-        <div className="flex justify-center mt-12">
-          <button
-            onClick={handleGetMore}
-            className="px-6 py-3 text-white bg-blue-600 rounded-full hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 transition"
-          >
-            Get More Cards
-          </button>
-        </div>
+        {filteredProducts.length === 0 && (
+          <div className="text-center mt-12 text-gray-600">
+            <p>No products found matching your search.</p>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default Card;
+export default Product;

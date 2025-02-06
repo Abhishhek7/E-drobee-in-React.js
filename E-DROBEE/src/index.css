@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .swiper-button-next,
+    .swiper-button-prev {
+        z-index: 10;
+        color: #000;
+    }
+}

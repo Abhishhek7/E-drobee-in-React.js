@@ -27,7 +27,7 @@ const Category = ({ product }) => {
 			"linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.4))",
 	};
 	return (
-		<Link to="/showcard">
+		<Link to="/cart">
 			<div className="bg-white dark:bg-slate-800 flex flex-col h-full relative z-20">
 				<div
 					className="absolute top-0 left-0 w-full h-full -z-10"
@@ -72,7 +72,7 @@ const Epcategory4 = () => {
 
 				{/* button start  */}
 				<div className="text-center mt-12">
-				<Link to='/showcard'>	<button className="text-white font-bold py-3 px-11 bg-blue-600 hover:bg-opacity-90 rounded">
+				<Link to='/product'>	<button className="text-white font-bold py-3 px-11 bg-blue-600 hover:bg-opacity-90 rounded">
 						See All
 					</button>
 					</Link>

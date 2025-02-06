@@ -41,7 +41,7 @@ const Footer = () => {
                 </div>
         </div>
         <div className='flex justify-between mt-8  border-t border-gray-700 pt-4'>
-            <p>&copy;2024 E-DROBE. All rights reserved.</p>
+            <p>&copy;2025 E-DROBE. All rights reserved.</p>
             <div className='flex space-x-4 mt-4 md:mt-0'>
                 <Link to='/privacypolicy'>Privacy Policy</Link>
                 <Link to= '/termsandconditions'> Terms of services </Link>

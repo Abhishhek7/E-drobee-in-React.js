@@ -1,10 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const ServicePage = () => {
+ 
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [errors, setErrors] = useState({});
+
+  
+  const nameRegex = /^[a-zA-Z\s]+$/; 
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let formErrors = {};
+
+    
+    if (!name || !nameRegex.test(name)) {
+      formErrors.name = 'Please enter a valid name (letters and spaces only).';
+    }
+
+    
+    if (!email || !emailRegex.test(email)) {
+      formErrors.email = 'Please enter a valid email address.';
+    }
+
+    
+    if (!message) {
+      formErrors.message = 'Message is required.';
+    }
+
+    
+    if (Object.keys(formErrors).length === 0) {
+      console.log('Form submitted');
+      
+    } else {
+      setErrors(formErrors);
+    }
+  };
+
   return (
     <div className="bg-gray-50 text-gray-800">
 
-      {/* Hero Section */}
+      
       <header className="bg-gradient-to-r from-gray-600 to-gray-800 text-white py-20 shadow-lg">
         <div className="container mx-auto text-center px-6">
           <h1 className="text-5xl font-extrabold mb-4">Our Services</h1>
@@ -12,7 +50,7 @@ const ServicePage = () => {
         </div>
       </header>
 
-      {/* Introduction Section */}
+      
       <section className="container mx-auto px-6 py-16 text-center">
         <h2 className="text-4xl font-semibold text-gray-700 mb-8">Why Choose Us?</h2>
         <p className="text-lg text-gray-600 mb-4">
@@ -23,7 +61,7 @@ const ServicePage = () => {
         </p>
       </section>
 
-      {/* Services Offered */}
+      {/* Services Section */}
       <section className="container mx-auto px-6 py-16 grid gap-12 lg:grid-cols-3">
         <div className="bg-white shadow-lg rounded-xl p-8 text-center">
           <h3 className="text-3xl font-semibold text-gray-700 mb-4">Fast & Reliable Delivery</h3>
@@ -50,7 +88,7 @@ const ServicePage = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      
       <section className="bg-gray-100 py-16">
         <div className="container mx-auto text-center px-6">
           <h2 className="text-4xl font-semibold text-gray-700 mb-8">What Our Customers Say</h2>
@@ -76,27 +114,47 @@ const ServicePage = () => {
         </div>
       </section>
 
-      {/* Contact Form Section */}
+      
       <section className="container mx-auto px-6 py-16">
         <h2 className="text-4xl font-semibold text-gray-700 text-center mb-8">Get in Touch</h2>
-        <form className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
+        <form className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg" onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-2">Name</label>
-            <input type="text" placeholder="Your Name" className="w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+            <input
+              type="text"
+              placeholder="Your Name"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            {errors.name && <p className="text-red-500 text-sm mt-2">{errors.name}</p>}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-2">Email</label>
-            <input type="email" placeholder="Your Email" className="w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+            <input
+              type="email"
+              placeholder="Your Email"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {errors.email && <p className="text-red-500 text-sm mt-2">{errors.email}</p>}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold mb-2">Message</label>
-            <textarea placeholder="Your Message" className="w-full px-4 py-2 border border-gray-300 rounded-lg" required></textarea>
+            <textarea
+              placeholder="Your Message"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            ></textarea>
+            {errors.message && <p className="text-red-500 text-sm mt-2">{errors.message}</p>}
           </div>
           <button type="submit" className="w-full py-3 text-white bg-gray-600 hover:bg-gray-700 rounded-lg transition-all">Submit</button>
         </form>
       </section>
 
-      {/* Footer */}
+      
       <footer className="bg-gray-800 text-white py-6">
         <div className="container mx-auto text-center">
           <p>&copy; {new Date().getFullYear()} [E-DROBE]. All rights reserved.</p>
@@ -108,5 +166,3 @@ const ServicePage = () => {
 };
 
 export default ServicePage;
-
-

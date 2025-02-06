@@ -53,7 +53,7 @@ const Shop = ({ product }) => {
 					</h2>
 				</div>
 			</div>
-		</Link>
+			</Link>
 	);
 };
 
@@ -86,6 +86,7 @@ const Epcategory3 = () => {
    <Epcategory4/> 
    <Epcategory8/>  
 		</section>
+		
 	);
 };
 export default Epcategory3;

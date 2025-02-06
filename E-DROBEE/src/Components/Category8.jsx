@@ -49,7 +49,7 @@ const ItemCard = ({ item, isTopTrending }) => {
 	const { title, followers, imageUrl, price } = item;
 	return (
 		<div className="col-span-2 md:col-span-1">
-			<Link to= "/showcard">
+			<Link to= "/cart">
 				<div className="bg-white dark:bg-slate-800 shadow-xl rounded-md p-6 relative">
 					{isTopTrending && (
 						<div

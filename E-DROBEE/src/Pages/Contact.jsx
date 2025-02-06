@@ -20,7 +20,11 @@ const ContactForm = () => {
 		} else if (formData.name.length < 3) {
 			formErrors.name = "Name must be at least 3 characters.";
 			isValid = false;
+		} else if (!/^[A-Za-z]+$/.test(formData.name)) {
+			formErrors.name = "Name must contain only alphabets.";
+			isValid = false;
 		}
+		
 
 		
 		if (!formData.email.trim()) {
